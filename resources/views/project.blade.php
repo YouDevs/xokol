@@ -67,7 +67,7 @@
                     <h2 class="text-5xl font-bold tracking-tighter uppercase">M&aacute;s proyectos</h2>
                 </div>
                 <a class="group flex items-center gap-4 text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors"
-                    href="{{ route('home') }}#proyectos">Ver todos <span
+                    href="{{ route('index') }}#proyectos">Ver todos <span
                         class="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span></a>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
