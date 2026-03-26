@@ -3,14 +3,9 @@
 use App\Http\Controllers\Settings;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
-Route::get('/home', function() {
-    return view('home');
-});
+Route::get('/', [HomeController::class, 'index'])->name('index');
 
 route::get('/project', function() {
     return view('project');
@@ -30,6 +25,12 @@ Route::middleware(['auth'])->group(function () {
     Route::put('settings/appearance', [Settings\AppearanceController::class, 'update'])->name('settings.appearance.update');
 
     Route::get('admin/services', [Admin\ServiceController::class, 'index'])->name('admin.services.index');
+    Route::get('admin/services/create', [Admin\ServiceController::class, 'create'])->name('admin.services.create');
+    Route::post('admin/services', [Admin\ServiceController::class, 'store'])->name('admin.services.store');
+    Route::get('admin/services/{service}', [Admin\ServiceController::class, 'edit'])->name('admin.services.edit');
+    Route::put('admin/services/{service}', [Admin\ServiceController::class, 'update'])->name('admin.services.update');
+
+    Route::delete('admin/service/{service}', [Admin\ServiceController::class, 'destroy'])->name('admin.services.destroy');
 
 });
 

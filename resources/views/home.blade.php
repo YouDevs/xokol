@@ -33,13 +33,6 @@
                 'image' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuDRGewAh8EVDQ56-CNX7lENAkQUDyx6_BEGaydMU82UW1SxejwSppOjgb2IbcmmK7l5UnDPNEOzbJlkyMI4eIKE57Sg1iRKyrP-jHHWNm-1Ry7HK75ayrgOqvJWLR9hpWSwOVG7DrYeCcjT38uj1KU9Me1sFxfVS5XBLv4baFebq9J7ETVOw7snGV6WYENK0C2XONXlDsDXNS9fJ1KAA-cQtA_U8ubA7WS6yeG4o-WhGp7G7fCBVcHOMWuElSSHYoLQDdCJ-pNS1PRL',
             ],
         ];
-
-        $services = [
-            ['name' => 'Branding', 'icon' => 'fingerprint', 'tag' => '10 Proyectos'],
-            ['name' => 'UI/UX Design', 'icon' => 'dashboard_customize', 'tag' => '5 Proyectos'],
-            ['name' => 'Content Strategy', 'icon' => 'auto_awesome', 'tag' => '12 Proyectos'],
-            ['name' => 'Desarrollo Web', 'icon' => 'code', 'tag' => '4 Proyectos'],
-        ];
     @endphp
 
     <section class="relative h-screen w-full flex items-center overflow-hidden pt-16">
@@ -80,11 +73,11 @@
                 @foreach ($services as $service)
                     <article class="bg-card-dark border border-border-dark p-8 rounded-xl hover:border-primary/50 transition-all group">
                         <div class="text-primary mb-6">
-                            <span class="material-symbols-outlined text-4xl">{{ $service['icon'] }}</span>
+                            <span class="material-symbols-outlined text-4xl">{{ $service->icon }}</span>
                         </div>
-                        <h3 class="text-xl font-bold mb-3">{{ $service['name'] }}</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-6">Servicio administrable desde CMS.</p>
-                        <span class="text-xs font-bold text-slate-500 group-hover:text-primary transition-colors">{{ $service['tag'] }}</span>
+                        <h3 class="text-xl font-bold mb-3">{{ $service->name }}</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">{{ $service->description }}</p>
+                        <span class="text-xs font-bold text-slate-500 group-hover:text-primary transition-colors">proximamente.</span>
                     </article>
                 @endforeach
             </div>

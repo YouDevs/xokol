@@ -9,6 +9,10 @@
                             <x-layouts.sidebar-link href="{{ route('dashboard') }}" icon='fas-house'
                                 :active="request()->routeIs('dashboard*')">Dashboard</x-layouts.sidebar-link>
 
+                            <!-- Servicios -->
+                            <x-layouts.sidebar-link href="{{ route('admin.services.index') }}" icon='fas-layer-group'
+                                :active="request()->routeIs('admin.services*')">Servicios</x-layouts.sidebar-link>
+
                             <!-- Example two level -->
                             <x-layouts.sidebar-two-level-link-parent title="Example two level" icon="fas-house"
                                 :active="request()->routeIs('two-level*')">
