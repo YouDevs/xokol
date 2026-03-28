@@ -29,8 +29,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('admin/services', [Admin\ServiceController::class, 'store'])->name('admin.services.store');
     Route::get('admin/services/{service}', [Admin\ServiceController::class, 'edit'])->name('admin.services.edit');
     Route::put('admin/services/{service}', [Admin\ServiceController::class, 'update'])->name('admin.services.update');
-
     Route::delete('admin/service/{service}', [Admin\ServiceController::class, 'destroy'])->name('admin.services.destroy');
+
+    Route::resource('admin/projects', Admin\ProjectController::class)->names('admin.projects');
+
+
 
 });
 
