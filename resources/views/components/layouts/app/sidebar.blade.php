@@ -14,7 +14,7 @@
                                 :active="request()->routeIs('admin.services*')">Servicios</x-layouts.sidebar-link>
 
                             <!-- Proyecto -->
-                            <x-layouts.sidebar-link href="{{ route('admin.projects.index') }}" icon='fas-layer-group'
+                            <x-layouts.sidebar-link href="{{ route('admin.projects.index') }}" icon='fas-briefcase'
                                 :active="request()->routeIs('admin.projects*')">Proyectos</x-layouts.sidebar-link>
 
                             <!-- Example two level -->
