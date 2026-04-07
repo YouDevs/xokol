@@ -1,6 +1,6 @@
 @php
     $isEdit = isset($project);
-    // TODO: Definir $selectedServices
+    $selectedServices = old('service_ids', $isEdit ? $project->services->pluck('id')->all(): []);
 @endphp
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -8,18 +8,18 @@
         <label for="title" class="block text-sm font-medium mb-1">Titulo</label>
         <input id="title" name="title" type="text" value="{{ old('title', $project->title ?? '') }}"
             class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 p-2" required>
-        {{-- @error('title')
+        @error('title')
             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-        @enderror --}}
+        @enderror
     </div>
 
     <div class="md:col-span-2">
         <label for="description" class="block text-sm font-medium mb-1">Contenido</label>
         <textarea id="description" name="description" rows="5"
             class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 p-2">{{ old('description', $project->description ?? '') }}</textarea>
-        {{-- @error('description')
+        @error('description')
             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-        @enderror --}}
+        @enderror
     </div>
 
     <div>
@@ -30,7 +30,14 @@
             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
         @enderror
 
-        {{-- TODO: mostrar imagen (si es formulario de editar) --}}
+        @if($isEdit && $project->image_carousel)
+            <div class="mt-2">
+                <img
+                    src="{{ Storage::url($project->image_carousel) }}"
+                    alt="{{ $project->title }}"
+                    class="h-64 p-4 w-auto rounded-md border border-gray-200 dark:border-gray-700">
+            </div>
+        @endif
 
     </div>
 
@@ -42,7 +49,14 @@
             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
         @enderror
 
-        {{-- //TODO: mostrar imagen (si es formulario de editar) --}}
+        @if($isEdit && $project->image_carousel)
+            <div class="mt-2">
+                <img
+                    src="{{ Storage::url($project->image_carousel) }}"
+                    alt="{{ $project->title }}"
+                    class="h-64 p-4 w-auto rounded-md border border-gray-200 dark:border-gray-700">
+            </div>
+        @endif
 
     </div>
 
@@ -50,9 +64,9 @@
         <label for="grid_image_size" class="block text-sm font-medium mb-1">Tamano Grid</label>
         <select id="grid_image_size" name="grid_image_size"
             class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 p-2" required>
-            <option value="1" @selected(old('grid_image_size', $project->grid_image_size ?? '1') === '1')>1</option>
-            <option value="2" @selected(old('grid_image_size', $project->grid_image_size ?? '1') === '2')>2</option>
-            <option value="3" @selected(old('grid_image_size', $project->grid_image_size ?? '1') === '3')>3</option>
+            <option value="1" @selected( (string) old('grid_image_size', $project->grid_image_size ?? 1) === '1')>1</option>
+            <option value="2" @selected( (string) old('grid_image_size', $project->grid_image_size ?? 1) === '2')>2</option>
+            <option value="3" @selected( (string) old('grid_image_size', $project->grid_image_size ?? 1) === '3')>3</option>
         </select>
         @error('grid_image_size')
             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -73,7 +87,11 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
             @forelse ($services as $service)
                 <label for="" class="flex items-center gap-2 text-sm border border-gray-200 dark:border-gray-700 rounded-md p-2">
-                    <input type="checkbox" name="service_ids[]" value="{{ $service->id }}">
+                    <input
+                        type="checkbox"
+                        name="service_ids[]"
+                        value="{{ $service->id }}"
+                        @checked( in_array($service->id, $selectedServices) ) >
                     <span>{{$service->name}}</span>
                 </label>
             @empty
