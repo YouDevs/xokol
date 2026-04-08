@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illumnate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Project extends Model
 {
@@ -27,6 +27,6 @@ class Project extends Model
 
     public function services(): BelongsToMany
     {
-        return $this->BelongsToMany(Service::class)->withTimestamps();
+        return $this->belongsToMany(Service::class)->withTimestamps();
     }
 }
