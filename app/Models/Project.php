@@ -3,12 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
+use Illumnate\Database\Eloquent\Relations\BelongsToMany;
 
 class Project extends Model
 {
-
     protected $fillable = [
         'title',
         'description',
@@ -29,6 +27,6 @@ class Project extends Model
 
     public function services(): BelongsToMany
     {
-        return $this->belongsToMany(Service::class)->withTimestamps();
+        return $this->BelongsToMany(Service::class)->withTimestamps();
     }
 }
