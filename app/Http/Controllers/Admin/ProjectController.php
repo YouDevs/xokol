@@ -24,10 +24,9 @@ class ProjectController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View
+    public function create()
     {
-        $services = Service::all();
-        return view('admin.projects.create', compact('services'));
+        //
     }
 
     /**
