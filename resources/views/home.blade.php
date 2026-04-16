@@ -62,16 +62,16 @@
             <div class="masonry-grid">
                 @foreach ($projects as $project)
                     <a href="/project"
-                        class="grid-size-{{ $project['size'] }} group relative overflow-hidden rounded-xl bg-card-dark border border-border-dark">
-                        <img alt="{{ $project['title'] }}"
+                        class="grid-size-{{ $project->gird_image_size }} group relative overflow-hidden rounded-xl bg-card-dark border border-border-dark">
+                        <img alt="{{ $project->title }}"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70"
-                            src="{{ $project['image'] }}" />
+                            src="{{ Storage::url($project->grid_image) }}" />
                         <div
                             class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500">
                         </div>
                         <div
                             class="absolute inset-0 p-8 flex flex-col justify-end translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            <h3 class="text-2xl font-bold mb-4">{{ $project['title'] }}</h3>
+                            <h3 class="text-2xl font-bold mb-4">{{ $project->title }}</h3>
                         </div>
                     </a>
                 @endforeach

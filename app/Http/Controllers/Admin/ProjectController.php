@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\Project;
 use App\Models\Service;
+use App\Http\Requests\Admin\StoreProjectRequest;
+use App\Http\Requests\Admin\UpdateProjectRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
 
@@ -24,28 +26,18 @@ class ProjectController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        //
+        $services = Service::all();
+        return view('admin.projects.create', compact('services'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreProjectRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            "title" => 'required|string|max:255',
-            "description" => 'required|string|max:255',
-            'image_carousel' => 'required|image|max:5120',
-            'grid_image' => 'required|image|max:5120',
-            "grid_image_size" => 'integer',
-            "is_active" => 'boolean',
-            "service_ids" => 'nullable|array',
-            'service_ids.*' => 'integer|exists:services,id'
-        ]);
-
-        $data = $validated;
+        $data = $request->validated();
 
         $data['image_carousel'] = $request->file('image_carousel')->store('projects/carousel', 'public');
         $data['grid_image'] = $request->file('grid_image')->store('projects/grid', 'public');
@@ -83,20 +75,9 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Project $project): RedirectResponse
+    public function update(UpdateProjectRequest $request, Project $project): RedirectResponse
     {
-        $validated = $request->validate([
-            "title" => 'required|string|max:255',
-            "description" => 'required|string|max:255',
-            'image_carousel' => 'nullable|image|max:5120',
-            'grid_image' => 'nullable|image|max:5120',
-            "grid_image_size" => 'integer',
-            "is_active" => 'boolean',
-            "service_ids" => 'nullable|array',
-            'service_ids.*' => 'integer|exists:services,id'
-        ]);
-
-        $data = $validated;
+        $data = $request->validated();
 
         // reemplazar imagenes si llegaron nuevas.
         if ($request->hasFile('image_carousel')) {
@@ -125,8 +106,24 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Project $project)
     {
-        //
+        // Eliminar imagenes
+        if ($project->image_carousel) {
+            Storage::disk('public')->delete($project->image_carousel);
+        }
+
+        if ($project->grid_image) {
+            Storage::disk('public')->delete($project->grid_image);
+        }
+
+        // Desvincular servicios
+        $project->services()->detach();
+
+        // Eliminar proyecto:
+        $project->delete();
+
+        return redirect()->route('admin.projects.index')->with('success', 'Proyecto Eliminado Exitosamente');
+
     }
 }
