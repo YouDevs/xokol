@@ -79,6 +79,9 @@ class ProjectController extends Controller
     {
         $data = $request->validated();
 
+        $serviceIds = $data['service_ids'] ?? [];
+        unset($data['service_ids']);
+
         // reemplazar imagenes si llegaron nuevas.
         if ($request->hasFile('image_carousel')) {
             if ($project->image_carousel) {
@@ -98,7 +101,7 @@ class ProjectController extends Controller
         $project->update($data);
 
         // sincronizamos servicios relacionados.
-        $project->services()->sync($data['service_ids']);
+        $project->services()->sync($serviceIds);
 
         return redirect()->route('admin.projects.index')->with('success', 'Proyecto Actualizado Exitosamente');
     }

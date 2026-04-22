@@ -3,22 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use App\Models\Service;
 use App\Models\Project;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request): View
     {
+        $selectedService = $request['service'];
+
         $services = Service::where('is_active', true)->orderBy('sort_order')->get();
 
-        $projects = Project::where('is_active', true)
-                        ->orderBy('is_featured')
-                        ->orderByDesc('published_at')
-                        ->orderByDesc('id')
-                        ->take(12)
-                        ->get();
+        $projectsQuery = Project::where('is_active', true);
 
-        return view('home', compact('services', 'projects'));
+        if ($selectedService) {
+            $projectsQuery->whereHas('services', function($query) use ($selectedService) {
+                $query->where('services.id', $selectedService);
+            });
+        }
+
+        $projects = $projectsQuery->take(12)->get();
+
+        return view('home', compact('services', 'projects', 'selectedService'));
     }
 }
