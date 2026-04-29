@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin;
 use App\Http\Controllers\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::post('/contact', [HomeController::class, 'sendContactFormEmail'])->name('contact');
 
 route::get('/project', function() {
     return view('project');

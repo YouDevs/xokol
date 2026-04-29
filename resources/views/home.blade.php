@@ -1,4 +1,7 @@
 <x-layouts.public :title="'XOKOL | Inicio'">
+    @if (session('success'))
+        <p>{{session('success')}}</p>
+    @endif
     <section class="relative h-screen w-full flex items-center overflow-hidden pt-16">
         <div class="absolute inset-0 z-0">
             <div class="w-full h-full bg-cover bg-center transition-all duration-700 opacity-40"
@@ -98,7 +101,7 @@
                 <p class="text-slate-400 text-lg mb-12 max-w-md">Cuéntanos sobre tu proyecto. Estamos listos para llevar tu marca al
                     siguiente nivel.</p>
             </div>
-            <x-contact-form />
+            <x-contact-form :services="$services" />
         </div>
     </section>
 
