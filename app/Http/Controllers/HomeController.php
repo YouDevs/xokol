@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ContactFormRequest;
 use Illuminate\View\View;
 use App\Models\Service;
 use App\Models\Project;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactFormMail;
 
 class HomeController extends Controller
 {
@@ -26,5 +29,15 @@ class HomeController extends Controller
         $projects = $projectsQuery->take(12)->get();
 
         return view('home', compact('services', 'projects', 'selectedService'));
+    }
+
+    public function sendContactFormEmail(ContactFormRequest $request)
+    {
+        $data = $request->validated();
+
+        Mail::to(config('mail.from.address'))
+            ->send(new ContactFormMail($data));
+
+        return redirect()->route('index')->with('success', 'Tu mensaje fue enviado correctamente');
     }
 }
