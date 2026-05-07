@@ -75,7 +75,7 @@
             </div>
             <div class="masonry-grid">
                 @foreach ($projects as $project)
-                    <a href="/project"
+                    <a href="{{ route('project', $project) }}"
                         class="grid-size-{{ $project->grid_image_size }} group relative overflow-hidden rounded-xl bg-card-dark border border-border-dark">
                         <img alt="{{ $project->title }}"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70"

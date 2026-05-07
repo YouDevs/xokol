@@ -8,17 +8,21 @@
         </div>
         <div class="relative z-10 max-w-7xl mx-auto px-6 pb-20 w-full">
             <div class="flex flex-wrap gap-3 mb-8">
-                <span
-                    class="px-4 py-1.5 rounded-full border border-primary/50 text-primary text-xs font-bold uppercase tracking-widest bg-primary/10">Identidad
-                    de Marca</span>
-                <span
-                    class="px-4 py-1.5 rounded-full border border-white/20 text-white/70 text-xs font-bold uppercase tracking-widest bg-white/5">Sistemas
-                    de Motion</span>
+                @foreach ($project->services as $service)
+                    <span
+                        class="px-4 py-1.5 rounded-full border border-primary/50 text-primary text-xs font-bold uppercase tracking-widest bg-primary/10"
+                    >
+                    {{ $service->name }}
+                    </span>
+                @endforeach
             </div>
-            <h1 class="text-6xl md:text-8xl lg:text-[10rem] font-bold leading-[0.85] tracking-tighter uppercase mb-6">Neon<br><span
-                    class="text-primary italic">Distorsi&oacute;n</span></h1>
+            <h1
+                class="text-6xl md:text-8xl lg:text-[10rem] font-bold leading-[0.85] tracking-tighter uppercase mb-6"
+            >
+                {{ $project->title }}
+            </h1>
             <p class="max-w-xl text-lg text-slate-300 font-light leading-relaxed">
-                Una narrativa visual de alto impacto para una marca tecnol&oacute;gica que buscaba romper el ruido del mercado.
+                {{ $project->description }}
             </p>
         </div>
         <div class="absolute bottom-0 right-0 z-20 bg-primary px-8 py-6 hidden lg:flex items-center gap-12 rounded-tl-3xl">
@@ -61,30 +65,35 @@
 
     <section class="py-24 border-t border-white/5 bg-background-dark/50">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="flex items-end justify-between mb-16">
-                <div>
-                    <h3 class="text-xs font-bold text-primary uppercase tracking-[0.3em] mb-4">Sigue explorando</h3>
-                    <h2 class="text-5xl font-bold tracking-tighter uppercase">M&aacute;s proyectos</h2>
+
+            @if($relatedProjects->count())
+                <div class="flex items-end justify-between mb-16">
+                    <div>
+                        <h3 class="text-xs font-bold text-primary uppercase tracking-[0.3em] mb-4">Sigue explorando</h3>
+                        <h2 class="text-5xl font-bold tracking-tighter uppercase">M&aacute;s proyectos</h2>
+                    </div>
+                    <a class="group flex items-center gap-4 text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors"
+                        href="{{ route('index') }}#proyectos">Ver todos <span
+                            class="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span></a>
                 </div>
-                <a class="group flex items-center gap-4 text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors"
-                    href="{{ route('index') }}#proyectos">Ver todos <span
-                        class="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span></a>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                @foreach (['Omni-Channel UI', 'Data Flow Visuals'] as $related)
-                    <article class="group cursor-pointer">
-                        <div class="aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-card-dark border border-white/10">
-                            <img alt="{{ $related }}"
-                                class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                                src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80" />
-                        </div>
-                        <div class="flex justify-between items-start">
-                            <h4 class="text-2xl font-bold uppercase tracking-tight mb-2">{{ $related }}</h4>
-                            <span class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">north_east</span>
-                        </div>
-                    </article>
-                @endforeach
-            </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    @foreach ($relatedProjects as $related)
+                        <article class="group cursor-pointer">
+                            <a href="{{ route('project', $related) }}">
+                                <div class="aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-card-dark border border-white/10">
+                                    <img alt="{{ $related->title }}"
+                                        class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                                        src="{{ Storage::url($related->image_carousel) }}" />
+                                </div>
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-2xl font-bold uppercase tracking-tight mb-2">{{ $related->title }}</h4>
+                                    <span class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">north_east</span>
+                                </div>
+                            </a>
+                        </article>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </section>
 
@@ -96,7 +105,7 @@
                 <p class="text-slate-400 text-lg mb-12 max-w-md">Cu&eacute;ntanos sobre tu proyecto. Estamos listos para llevar tu marca
                     al siguiente nivel.</p>
             </div>
-            <x-contact-form />
+            <x-contact-form :services="$services" />
         </div>
     </section>
 
