@@ -43,7 +43,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return to_route('settings.profile.edit')->with('status', __('Profile updated successfully'));
+        return to_route('settings.profile.edit')->with('status', 'Profile updated successfully');
     }
 
     public function destroy(Request $request): RedirectResponse
@@ -57,6 +57,6 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return to_route('home');
+        return to_route('index');
     }
 }
