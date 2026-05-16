@@ -19,7 +19,9 @@
             <h1
                 class="text-6xl md:text-8xl lg:text-[10rem] font-bold leading-[0.85] tracking-tighter uppercase mb-6"
             >
-                {{ $project->title }}
+                {{ $titleMain }}
+                <br>
+                <span class="text-primary italic">{{ $titleAccent }}</span>
             </h1>
             <p class="max-w-xl text-lg text-slate-300 font-light leading-relaxed">
                 {{ $project->description }}
@@ -32,12 +34,20 @@
             </div>
             <div class="flex flex-col">
                 <span class="text-[10px] uppercase font-bold text-black/60 tracking-widest">Likes</span>
-                <span class="text-2xl font-bold text-black tracking-tighter">2,841</span>
+                <span class="text-2xl font-bold text-black tracking-tighter">{{ number_format($project->likes_count) }}</span>
             </div>
-            <button class="group flex items-center gap-3 bg-black text-white px-6 py-3 rounded-xl hover:bg-neutral-900 transition-all">
-                <span class="material-symbols-outlined text-primary">favorite</span>
-                <span class="text-sm font-bold uppercase tracking-widest">Me gusta</span>
-            </button>
+            <form action="{{ route('project.register-like', $project) }}" method="POST">
+                @csrf
+
+                <button
+                    type="submit"
+                    class="group flex items-center gap-3 px-6 py-3 rounded-xl {{ $alreadyLiked ? 'bg-neutral-900 text-primary cursor-not-allowed': 'bg-black hover:bg-neutral-900 transition-all text-white' }}"
+                    @disabled($alreadyLiked)
+                    >
+                    <span class="material-symbols-outlined text-primary">favorite</span>
+                    <span class="text-sm font-bold uppercase tracking-widest">Me gusta</span>
+                </button>
+            </form>
         </div>
     </section>
 

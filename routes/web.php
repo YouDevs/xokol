@@ -10,6 +10,7 @@ Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::post('/contact', [HomeController::class, 'sendContactFormEmail'])->name('contact');
 
 route::get('/project/{project}', [ProjectController::class, 'index'])->name('project');
+route::post('/project/{project}/register-like', [ProjectController::class, 'registerLike'])->name('project.register-like');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
