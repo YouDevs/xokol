@@ -9,7 +9,7 @@ use App\Models\Project;
 
 class ProjectController extends Controller
 {
-    public function index(Project $project): View
+    public function index(Request $request, Project $project): View
     {
         $services = Service::where('is_active', true)->orderBy('sort_order')->get();
 
@@ -20,10 +20,24 @@ class ProjectController extends Controller
         ->limit(5)
         ->get();
 
+        $this->registerView($request, $project->id);
+
         return view('project', [
             'services' => $services,
             'project' => $project,
             'relatedProjects' => $relatedProjects
         ]);
     }
+
+    private function registerView($request, $projectId): void
+    {
+        $sessionKey = "project_viewed_{$projectId}";
+
+        if(! $request->session()->has($sessionKey)) {
+            Project::whereKey($projectId)->increment('views_count');
+
+            $request->session()->put($sessionKey, true);
+        }
+    }
+
 }
