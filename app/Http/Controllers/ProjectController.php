@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\Service;
 use App\Models\Project;
+use Illuminate\Http\RedirectResponse;
 
 class ProjectController extends Controller
 {
@@ -22,11 +23,33 @@ class ProjectController extends Controller
 
         $this->registerView($request, $project->id);
 
+        $sessionKey = "project_liked_{$project->id}";
+        $alreadyLiked = $request->session()->get($sessionKey, false);
+
+       [$titleMain, $titleAccent] = $this->splitTitle($project->title);
+
+
         return view('project', [
             'services' => $services,
             'project' => $project,
-            'relatedProjects' => $relatedProjects
+            'relatedProjects' => $relatedProjects,
+            'alreadyLiked' => $alreadyLiked,
+            'titleMain' => $titleMain,
+            'titleAccent' => $titleAccent,
         ]);
+    }
+
+    public function registerLike(Request $request, Project $project): RedirectResponse
+    {
+        $sessionKey = "project_liked_{$project->id}";
+
+        if (! $request->session()->get($sessionKey)) {
+            $project->increment('likes_count');
+
+            $request->session()->put($sessionKey, true);
+        }
+
+        return redirect()->route('project', $project);
     }
 
     private function registerView($request, $projectId): void
@@ -38,6 +61,20 @@ class ProjectController extends Controller
 
             $request->session()->put($sessionKey, true);
         }
+    }
+
+    private function splitTitle($title): array
+    {
+        $parts = explode(' ', $title);
+
+        if(count($parts) === 1) {
+            $parts = [$parts[0], ''];
+        }
+
+        $accent = array_pop($parts);
+        $main = implode(' ', $parts);
+
+        return [$main, $accent];
     }
 
 }
