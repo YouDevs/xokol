@@ -77,9 +77,11 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project): RedirectResponse
     {
-        $data = $request->validated();
+        dd($request->validated());
 
-        $serviceIds = $data['service_ids'] ?? [];
+        $data = $request->validated(); // projects
+
+        $serviceIds = $data['service_ids'] ?? []; // project_services
         unset($data['service_ids']);
 
         // reemplazar imagenes si llegaron nuevas.
