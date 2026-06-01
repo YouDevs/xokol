@@ -11,9 +11,14 @@ use App\Http\Requests\Admin\StoreProjectRequest;
 use App\Http\Requests\Admin\UpdateProjectRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
+use App\Services\Admin\ProjectService;
 
 class ProjectController extends Controller
 {
+
+    public function __construct(private ProjectService $projectService)
+    {}
+
     /**
      * Display a listing of the resource.
      */
@@ -77,33 +82,7 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project): RedirectResponse
     {
-        dd($request->validated());
-
-        $data = $request->validated(); // projects
-
-        $serviceIds = $data['service_ids'] ?? []; // project_services
-        unset($data['service_ids']);
-
-        // reemplazar imagenes si llegaron nuevas.
-        if ($request->hasFile('image_carousel')) {
-            if ($project->image_carousel) {
-                Storage::disk('public')->delete($project->image_carousel);
-            }
-            $data['image_carousel'] = $request->file('image_carousel')->store('projects/carousel', 'public');
-        }
-
-        if ($request->hasFile('grid_image')) {
-            if ($project->grid_image) {
-                Storage::disk('public')->delete($project->grid_image);
-            }
-            $data['grid_image'] = $request->file('grid_image')->store('projects/grid', 'public');
-        }
-
-        // actualizamos el proyecto en la BD.
-        $project->update($data);
-
-        // sincronizamos servicios relacionados.
-        $project->services()->sync($serviceIds);
+        $this->projectService->update($request, $project);
 
         return redirect()->route('admin.projects.index')->with('success', 'Proyecto Actualizado Exitosamente');
     }

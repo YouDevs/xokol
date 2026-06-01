@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('project_content_blocks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->contrained()->cascadeOnDelete();
+            $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->string('type', 20);
             $table->text('title')->nullable();
             $table->text('content')->nullable();
