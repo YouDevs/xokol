@@ -11,9 +11,9 @@ class ProjectService
 
     public function update(UpdateProjectRequest $request, Project $project): void
     {
-        $projectData = $request->validated(); // projects y project_content_blocks
+        $projectData = $request->validated();
 
-        $serviceIds = $projectData['service_ids'] ?? []; // project_service
+        $serviceIds = $projectData['service_ids'] ?? [];
 
         $this->syncProjectContentBlocks($project, $projectData);
 
@@ -51,13 +51,30 @@ class ProjectService
 
     private function syncProjectContentBlocks(Project $project, array $data):void
     {
-        Log::info('Project content payload', [
-            'project_id' => $project->id,
-            'block_content_types' => $data['block_content_types'] ?? [],
-            'block_titles' => $data['block_titles'] ?? [],
-            'block_contents' => $data['block_contents'] ?? [],
-            'block_images' => $data['block_images'] ?? [],
-        ]);
+        // Log::info('Project content payload', [
+        //     'project_id' => $project->id,
+        //     'block_contents' => $data['block_contents'] ?? [],
+        //     'block_images' => $data['block_images'] ?? [],
+        // ]);
+
+        $contentTypes = $data['block_content_types'] ?? [];
+        $titles = $data['block_titles'] ?? [];
+
+        $blocks = [];
+
+        foreach($contentTypes as $index => $contentType) {
+
+            $title = $titles[$index] ?? '';
+
+            $blocks[] = [
+                'type' => $contentType,
+                'title' => $title,
+                'sort_order' => count($blocks) + 1,
+            ];
+        }
+
+        $project->contentBlocks()->createMany($blocks);
+
     }
 
 }

@@ -31,8 +31,8 @@ class Project extends Model
         return $this->belongsToMany(Service::class)->withTimestamps();
     }
 
-    public function contenctBlocks(): HasMany
+    public function contentBlocks(): HasMany
     {
-        return $this->hasMany(ProjectContentBlock::class);
+        return $this->hasMany(ProjectContentBlock::class)->orderBy('sort_order');
     }
 }

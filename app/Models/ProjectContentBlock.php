@@ -12,14 +12,16 @@ class ProjectContentBlock extends Model
         'type',
         'title',
         'content',
-        'image_path'
+        'image_path',
+        'sort_order',
     ];
 
     protected function casts(): array
     {
         return [
-            'project_id' => 'integer'
-        ]
+            'project_id' => 'integer',
+            'sort_order' => 'integer',
+        ];
     }
 
     public function project(): BelongsTo
