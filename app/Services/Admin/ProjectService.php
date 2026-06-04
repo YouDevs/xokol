@@ -53,25 +53,29 @@ class ProjectService
     {
         // Log::info('Project content payload', [
         //     'project_id' => $project->id,
-        //     'block_contents' => $data['block_contents'] ?? [],
         //     'block_images' => $data['block_images'] ?? [],
         // ]);
 
         $contentTypes = $data['block_content_types'] ?? [];
         $titles = $data['block_titles'] ?? [];
+        $contents = $data['block_contents'] ?? [];
 
         $blocks = [];
 
         foreach($contentTypes as $index => $contentType) {
 
             $title = $titles[$index] ?? '';
+            $content = $contents[$index] ?? '';
 
             $blocks[] = [
                 'type' => $contentType,
                 'title' => $title,
+                'content' => $content,
                 'sort_order' => count($blocks) + 1,
             ];
         }
+
+        $project->contentBlocks()->delete();
 
         $project->contentBlocks()->createMany($blocks);
 
