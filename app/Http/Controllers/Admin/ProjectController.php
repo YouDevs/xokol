@@ -69,7 +69,7 @@ class ProjectController extends Controller
     {
         $services = Service::all();
 
-        $project->load('services');
+        $project->load('services', 'contentBlocks');
 
         return view('admin.projects.edit', [
             'services' => $services,

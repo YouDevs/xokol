@@ -131,53 +131,129 @@
             </button>
         </div>
 
+        {{-- El formulario que mostrará los bloques de la BD --}}
+        <div class="space-y-6">
+            @foreach ($project->contentBlocks as $index => $block)
+                <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+                    <div class="mb-4">
+                        <h3 class="text-base font-medium text-gray-800 dark:text-gray-100">
+                            Bloque {{ $loop->iteration }}
+                        </h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4" x-data="{ selectedContentType: '{{ $block->type }}' }">
+                        <div>
+                            <label class="mb-1 block text-sm font-medium" for="existing_block_content_type_{{ $loop->iteration }}">
+                                Tipo de Contenido
+                            </label>
+
+                            <select
+                                x-model="selectedContentType"
+                                id="existing_block_content_type_{{ $loop->iteration }}"
+                                name="block_content_types[]"
+                                class="w-full rounded-md border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900"
+                            >
+                                <option value="">Elige el tipo de contenido</option>
+                                <option value="title">Título</option>
+                                <option value="content">Texto</option>
+                                <option value="image_path">Imagen</option>
+                            </select>
+                        </div>
+
+                        <div x-show="selectedContentType === 'title'">
+                            <label class="mb-1 block text-sm font-medium" for="existing_block_title_{{ $loop->iteration }}">
+                                Título
+                            </label>
+
+                            <input
+                                id="existing_block_title_{{ $loop->iteration }}"
+                                name="block_titles[]"
+                                type="text"
+                                class="w-full rounded-md border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900"
+                                value="{{ $block->title }}"
+                            >
+                        </div>
+
+                        <div x-show="selectedContentType === 'content'">
+                            <label class="mb-1 block text-sm font-medium" for="existing_block_content_{{ $loop->iteration }}">
+                                Texto enriquecido
+                            </label>
+
+                            <textarea
+                                id="existing_block_content_{{ $loop->iteration }}"
+                                name="block_contents[]"
+                                rows="5"
+                                data-rich-text="true"
+                                class="w-full rounded-md border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900"
+                            >{{$block->content}}</textarea>
+                        </div>
+
+                        <div x-show="selectedContentType === 'image_path'">
+                            <label class="mb-1 block text-sm font-medium" for="existing_block_image_{{ $loop->iteration }}">
+                                Imagen
+                            </label>
+
+                            <input
+                                id="existing_block_image_{{ $loop->iteration }}"
+                                name="block_images[]"
+                                type="file"
+                                accept="image/*"
+                                class="w-full rounded-md border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900"
+                            >
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        {{-- Formulario para crear nuevos bloques --}}
         <div class="space-y-6">
             <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
                 <div class="mb-4">
                     <h3 class="text-base font-medium text-gray-800 dark:text-gray-100">
-                        Bloque 1
+                        Bloque  {{ $project->contentBlocks->count() + 1 }}
                     </h3>
                 </div>
 
                 <div class="grid grid-cols-1 gap-4">
                     <div x-show="showBlockType">
-                        <label class="mb-1 block text-sm font-medium" for="block_content_type_1">
+                        <label class="mb-1 block text-sm font-medium" for="block_content_type">
                             Tipo de Contenido
                         </label>
 
                         <select
                             x-model="selectedContentType"
-                            id="block_content_type_1"
+                            id="block_content_type"
                             name="block_content_types[]"
                             class="w-full rounded-md border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900"
                         >
                             <option value="">Elige el tipo de contenido</option>
                             <option value="title">Título</option>
-                            <option value="text">Texto</option>
-                            <option value="image">Imagen</option>
+                            <option value="content">Texto</option>
+                            <option value="image_path">Imagen</option>
                         </select>
                     </div>
 
                     <div x-show="selectedContentType === 'title'">
-                        <label class="mb-1 block text-sm font-medium" for="block_title_1">
+                        <label class="mb-1 block text-sm font-medium" for="block_title">
                             Título
                         </label>
 
                         <input
-                            id="block_title_1"
+                            id="block_title"
                             name="block_titles[]"
                             type="text"
                             class="w-full rounded-md border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900"
                         >
                     </div>
 
-                    <div x-show="selectedContentType === 'text'">
-                        <label class="mb-1 block text-sm font-medium" for="block_content_1">
+                    <div x-show="selectedContentType === 'content'">
+                        <label class="mb-1 block text-sm font-medium" for="block_content">
                             Texto enriquecido
                         </label>
 
                         <textarea
-                            id="block_content_1"
+                            id="block_content"
                             name="block_contents[]"
                             rows="5"
                             data-rich-text="true"
@@ -185,13 +261,13 @@
                         ></textarea>
                     </div>
 
-                    <div x-show="selectedContentType === 'image'">
-                        <label class="mb-1 block text-sm font-medium" for="block_image_1">
+                    <div x-show="selectedContentType === 'image_path'">
+                        <label class="mb-1 block text-sm font-medium" for="block_image">
                             Imagen
                         </label>
 
                         <input
-                            id="block_image_1"
+                            id="block_image"
                             name="block_images[]"
                             type="file"
                             accept="image/*"
