@@ -193,6 +193,13 @@
                                 Imagen
                             </label>
 
+                            <div class="mt-2">
+                                <img
+                                    src="{{ Storage::url($block->image_path) }}"
+                                    class="h-20 w-auto rounded-md m-2"
+                                >
+                            </div>
+
                             <input
                                 id="existing_block_image_{{ $loop->iteration }}"
                                 name="block_images[]"
