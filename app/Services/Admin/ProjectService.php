@@ -5,17 +5,19 @@ namespace App\Services\Admin;
 use App\Http\Requests\Admin\UpdateProjectRequest;
 use App\Models\Project;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectService
 {
 
     public function update(UpdateProjectRequest $request, Project $project): void
     {
+        // dd($request->validated());
         $projectData = $request->validated();
 
         $serviceIds = $projectData['service_ids'] ?? [];
 
-        $this->syncProjectContentBlocks($project, $projectData);
+        $this->syncProjectContentBlocks($request, $project, $projectData);
 
         unset(
             $projectData['service_ids'],
@@ -49,28 +51,47 @@ class ProjectService
     }
 
 
-    private function syncProjectContentBlocks(Project $project, array $data):void
+    private function syncProjectContentBlocks(UpdateProjectRequest $request, Project $project, array $data):void
     {
-        // Log::info('Project content payload', [
-        //     'project_id' => $project->id,
-        //     'block_images' => $data['block_images'] ?? [],
-        // ]);
-
         $contentTypes = $data['block_content_types'] ?? [];
         $titles = $data['block_titles'] ?? [];
         $contents = $data['block_contents'] ?? [];
+        $images = $data['block_images'] ?? [];
 
         $blocks = [];
 
         foreach($contentTypes as $index => $contentType) {
+            if (blank($contentType)) {
+                continue;
+            }
 
             $title = $titles[$index] ?? '';
             $content = $contents[$index] ?? '';
+            $image_path = '';
+
+            if ($contentType == 'image_path') {
+
+                $current = $project->contentBlocks()
+                    ->where('type', 'image_path')
+                    ->where('sort_order', $index + 1)
+                    ->first();
+
+                if ($request->hasFile("block_images.$index")) {
+                    $current?->image_path && Storage::disk('public')->delete($current->image_path);
+                    
+                    $image_path = $request->file("block_images.$index")->store('projects/blocks', 'public');
+                }
+                else {
+                    $image_path = $current?->image_path ?? '';
+                }
+
+            }
 
             $blocks[] = [
                 'type' => $contentType,
                 'title' => $title,
                 'content' => $content,
+                'image_path' => $image_path,
                 'sort_order' => count($blocks) + 1,
             ];
         }
